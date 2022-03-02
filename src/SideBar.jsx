@@ -6,11 +6,13 @@ const Container = styled.div`
   flex-direction: column;
   background: linear-gradient(25deg, #0378bdd2, #83deffd2);
   color: white;
-  border-radius: 10px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
   padding: 10px 15px;
   width: 15rem;
-  font-family: 'Montserrat';
-  gap: 1rem;
+  font-family: 'sans-serif';
+  font-size: 1.2rem;
+  gap: 2rem;
   list-style: none;
 `;
 
@@ -37,11 +39,11 @@ export default function SideBar() {
   return (
     <Container>
       <Dropdown>
-        <Option value='London'>London</Option>
-        <Option value='Paris'>Paris</Option>
+        <Option value="London">London</Option>
+        <Option value="Paris">Paris</Option>
       </Dropdown>
       <section style={{ paddingBottom: '2rem' }}>
-        <li style={{ fontSize: '1.5rem' }}>Tuesday</li>
+        <li style={{ fontSize: '2rem' }}>Tuesday</li>
         <li style={{ fontWeight: '300', paddingBottom: '1rem' }}>
           01 March 2022
         </li>
@@ -49,12 +51,8 @@ export default function SideBar() {
       </section>
 
       <section style={{ paddingBottom: '1rem' }}>
-        <li style={{ fontSize: '3rem', paddingBottom: '1rem' }}>
-          &#128526;
-        </li>
-        <li style={{ fontSize: '3rem', fontWeight: '500' }}>
-          4&#176;C
-        </li>
+        <li style={{ fontSize: '4rem', paddingBottom: '1rem' }}>&#128526;</li>
+        <li style={{ fontSize: '4rem', fontWeight: '500' }}>4&#176;C</li>
         <li>Sunny</li>
       </section>
 
