@@ -28,7 +28,7 @@ function LineChart() {
   });
   const svgRef = useRef();
   const size = useWindowSize();
-  const margin = { top: 40, bottom: 100, left: 20, right: 100 };
+  const margin = { top: 0, bottom: 50, left: 20, right: 110 };
   const height = size.height;
   const width = size.width;
 
@@ -40,16 +40,10 @@ function LineChart() {
     // Define scales for x and y
     const xScale = d3
       .scaleTime()
-      .domain([
-        new Date(2022, 2, 1, 1, 0),
-        new Date(2022, 2, 1, 23, 0),
-      ])
+      .domain([new Date(2022, 2, 1, 1, 0), new Date(2022, 2, 1, 23, 0)])
       .range([0, width]);
 
-    const yScale = d3
-      .scaleLinear()
-      .domain([-10, 20])
-      .range([height, 0]);
+    const yScale = d3.scaleLinear().domain([-10, 20]).range([height, 0]);
 
     // Define axis for x and y
     const xAxis = d3.axisBottom(xScale).tickSize(0).tickPadding(10);
@@ -65,7 +59,7 @@ function LineChart() {
           .curve(d3.curveCardinal)
           .x((d) => xScale(d[1]))
           .y0(height)
-          .y1((d) => yScale(Math.round(d[0]))),
+          .y1((d) => yScale(Math.round(d[0])))
       )
       .attr('font-family', 'sans-serif')
       .style('stroke', 'none')
@@ -73,10 +67,7 @@ function LineChart() {
       .style('fill', 'url(#temperature-gradient)');
 
     // Linear gradient
-    const color = d3.scaleSequential(
-      yScale.domain(),
-      d3.interpolateTurbo,
-    );
+    const color = d3.scaleSequential(yScale.domain(), d3.interpolateTurbo);
     d3.select(svgRef.current)
       .select('.linGrad')
       .attr('id', 'temperature-gradient')
@@ -108,34 +99,28 @@ function LineChart() {
       .attr('font-family', 'sans-serif')
       .attr('font-size', '13px')
       .attr('opacity', '0.65')
-      .attr(
-        'transform',
-        `translate(${margin.left}, ${margin.top - 12})`,
-      )
+      .attr('transform', `translate(${margin.left}, ${margin.top - 12})`)
       .style('cursor', 'default');
 
     // Append x axis
     svg
       .select('.xAxis')
       .call(xAxis)
-      .attr(
-        'transform',
-        `translate(${margin.left}, ${height + margin.top})`,
-      )
+      .attr('transform', `translate(${margin.left}, ${height + margin.top})`)
       .select('path')
       .attr('opacity', '0');
   }, [forecast]);
   return (
-    <div className='div_temp'>
+    <div className="div_temp">
       <svg
         height={height + margin.bottom}
         width={width + margin.right}
         ref={svgRef}
       >
-        <linearGradient className='linGrad' />
-        <g className='xAxis' />
-        <path className='areaChart' />
-        <g className='labels'>{labels}</g>
+        <linearGradient className="linGrad" />
+        <g className="xAxis" />
+        <path className="areaChart" />
+        <g className="labels">{labels}</g>
       </svg>
     </div>
   );

@@ -10,8 +10,8 @@ export default function useWindowSize() {
     function handleResize() {
       // Set window width/height to state
       setWindowSize({
-        width: window.innerWidth > 1000 ? 700 : window.innerWidth - 300,
-        height: window.innerHeight - 800,
+        width: 850,
+        height: 200,
       });
     }
     // Add event listener
