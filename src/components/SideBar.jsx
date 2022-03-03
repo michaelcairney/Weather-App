@@ -95,7 +95,7 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
         <Option value='London'>London</Option>
         <Option value='Paris'>Paris</Option>
       </Dropdown>
-      <section style={{ paddingBottom: '2rem' }}>
+      <section style={{ paddingBottom: '1rem' }}>
         <li style={{ fontSize: '2rem' }}>{currDay}</li>
         <li style={{ fontWeight: '300', paddingBottom: '1rem' }}>
           {currDate} {currMonth} 2022
@@ -103,9 +103,9 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
         <li style={{ fontWeight: '300' }}></li>
       </section>
 
-      <section style={{ paddingBottom: '1rem' }}>
+      <section style={{ paddingBottom: '3rem' }}>
         <li
-          style={{ fontSize: '5rem', paddingBottom: '0.5rem' }}
+          style={{ fontSize: '5rem', paddingBottom: '2rem' }}
           dangerouslySetInnerHTML={{ __html: emoji }}
         ></li>
         <li style={{ fontSize: '4rem', fontWeight: '500' }}>
@@ -115,7 +115,7 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
         <li>{forecastLabel}</li>
       </section>
 
-      <div style={{ display: 'flex', gap: '2rem' }}>
+      <div style={{ display: 'flex', gap: '3rem' }}>
         <section>
           <li style={{ fontWeight: '300' }}>Sunrise</li>
           <li>{sunrise} AM</li>

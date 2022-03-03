@@ -18,7 +18,7 @@ const RowContainer2 = styled.div`
   display: flex;
   flex-direction: row;
   padding-left: 20px;
-  justify-content: space-around;
+  justify-content: flex-end;
   flex-wrap: wrap;
 `;
 
@@ -65,20 +65,10 @@ export default function App() {
   ];
 
   var days = weatherData?.daily?.time?.map(
-    (time) => daysOfWeek[new Date(time).getDay()]
+    (time) => daysOfWeek[new Date(time).getDay()],
   );
 
-  // CLOUDCOVER RADIAL
-  const currCloudCover =
-    weatherData?.hourly?.cloudcover
-      ?.slice(0, 24)
-      .reduce((prev, curr) => prev + curr) / 24;
-
-  // HUMIDITY RADIAL
-  const currHumidity =
-    weatherData?.hourly?.relativehumidity_2m
-      ?.slice(0, 24)
-      .reduce((prev, curr) => prev + curr) / 24;
+ 
 
   // GET APPROPRIATE INFO BASED ON API WEATHERCODE
   const getWeatherCode = (code) => {
@@ -90,6 +80,7 @@ export default function App() {
       case 0:
         weather = 'Clear sky';
         emoji = '&#128526;';
+        symbol = '&#x2600';
         break;
       case 1:
         weather = 'Mainly clear';
@@ -117,9 +108,16 @@ export default function App() {
       case 65:
         weather = 'Heavy rain';
         break;
+      case 80:
+        weather = 'Slight rain showers';
+        emoji = '&#128546;';
+        symbol = '&#x2602;';
+        break;
     }
     return { weather, emoji, symbol };
   };
+
+  console.log(weatherData);
 
   if (loading) {
     return <p>loading</p>;
@@ -129,13 +127,16 @@ export default function App() {
         <SideBar
           data={weatherData}
           forecastLabel={
-            getWeatherCode(weatherData?.current_weather?.weathercode).weather
+            getWeatherCode(weatherData?.current_weather?.weathercode)
+              .weather
           }
           emoji={
-            getWeatherCode(weatherData?.current_weather?.weathercode).emoji
+            getWeatherCode(weatherData?.current_weather?.weathercode)
+              .emoji
           }
           symbol={
-            getWeatherCode(weatherData?.current_weather?.weathercode).symbol
+            getWeatherCode(weatherData?.current_weather?.weathercode)
+              .symbol
           }
         />
         <ColContainer>
@@ -144,26 +145,40 @@ export default function App() {
               <CardDetail
                 weekday={day}
                 forecastLabel={
-                  getWeatherCode(weatherData?.daily?.weathercode[index]).weather
+                  getWeatherCode(
+                    weatherData?.daily?.weathercode[index],
+                  ).weather
                 }
                 emoji={
-                  getWeatherCode(weatherData?.daily?.weathercode[index]).emoji
+                  getWeatherCode(
+                    weatherData?.daily?.weathercode[index],
+                  ).emoji
                 }
                 symbol={
-                  getWeatherCode(weatherData?.daily?.weathercode[index]).symbol
+                  getWeatherCode(
+                    weatherData?.daily?.weathercode[index],
+                  ).symbol
                 }
-                highTemp={weatherData?.daily?.temperature_2m_max[index]}
-                lowTemp={weatherData?.daily?.temperature_2m_min[index]}
+                highTemp={
+                  weatherData?.daily?.temperature_2m_max[index]
+                }
+                lowTemp={
+                  weatherData?.daily?.temperature_2m_min[index]
+                }
               />
             ))}
-          </RowCard>
+          </RowCard>{' '}
+          {/* <RowContainer2>
+            <Radial
+              percent={Math.round(currHumidity)}
+              measure='Humidity'
+            />
+            <Radial
+              percent={Math.round(currCloudCover)}
+              measure='Cloudcover'
+            />
+          </RowContainer2> */}
           <ChartUpdate data={weatherData} />
-          {/* <LineChart data={weatherData} /> */}
-          <RowContainer2>
-            <Radial percent={Math.round(currHumidity)} measure="Humidity" />
-            <Radial percent={Math.round(currCloudCover)} measure="Cloudcover" />
-            <Radial percent={55} />
-          </RowContainer2>
         </ColContainer>
       </RowContainer1>
     );

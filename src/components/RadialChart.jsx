@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react';
 
 export default function RadialChart({ percent, measure }) {
   const chartRef = useRef(null);
-  const radius = 60;
+  const radius = 50;
   const height = radius * 2;
   const width = radius * 2;
   const margin = 40;

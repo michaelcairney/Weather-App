@@ -50,7 +50,8 @@ const WeatherIcon = styled.div`
   font-size: 25px;
   padding: 10px;
 `;
-const ForecastLabel = styled.div``;
+const ForecastLabel = styled.div`
+text-align: center`;
 function CardDetail({ weekday, highTemp, lowTemp, emoji, forecastLabel, symbol }) {
   return (
     <Card>

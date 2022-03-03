@@ -29,7 +29,7 @@ function LineChart({ data }) {
       ])
       .range([0, width]);
 
-    const yScale = d3.scaleLinear().domain([-10, 20]).range([height, 0]);
+    const yScale = d3.scaleLinear().domain([-5, 25]).range([height, 0]);
 
     // Define axis for x and y
     const xAxis = d3.axisBottom(xScale).tickSize(0).tickPadding(10);
@@ -75,7 +75,7 @@ function LineChart({ data }) {
         .select('.labels')
         .selectAll('text')
         .data(forecast)
-        .text((d) => `${Math.round(d[0])}°`)
+        .text((d, i) => i % 2 === 0 ?`${Math.round(d[0])}°` : null)
         .attr('text-anchor', 'middle')
         .attr('x', (d) => xScale(d[1]))
         .attr('y', (d) => yScale(d[0]))

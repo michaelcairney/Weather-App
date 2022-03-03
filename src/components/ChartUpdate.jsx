@@ -2,6 +2,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import LineChart from './LineChart';
 import PrecipitationChart from './PrecipitationChart';
+import Radial from './RadialChart';
 
 const theme = {
   spaces: {
@@ -12,10 +13,19 @@ const theme = {
   },
 };
 
+const RowContainer2 = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding-left: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10rem;
+`;
+
 const Button = styled.button`
   float: left;
   margin-top: 10px;
-  width: 9.37rem;
+  width: 10.37rem;
   border: none;
   font-size: 15px;
   padding: 7px;
@@ -49,17 +59,44 @@ Button.defaultProps = {
   theme: 'spaces',
 };
 export default function ChartUpdate({ data }) {
-  const types = ['Temperature', 'Precipitation'];
+
+ // CLOUDCOVER RADIAL
+ const currCloudCover =
+ data?.hourly?.cloudcover
+   ?.slice(0, 24)
+   .reduce((prev, curr) => prev + curr) / 24;
+
+// HUMIDITY RADIAL
+const currHumidity =
+ data?.hourly?.relativehumidity_2m
+   ?.slice(0, 24)
+   .reduce((prev, curr) => prev + curr) / 24;
+
+  const types = ['Temperature °C', 'Precipitation (mm)'];
   const [active, setActive] = useState(types[0]);
   return (
     <div>
-      {types.map((type) => (
-        <Button active={active === type} onClick={() => setActive(type)}>
-          {type}
-        </Button>
-      ))}
-      {active === 'Temperature' && <LineChart data={data} />}
-      {active === 'Precipitation' && <PrecipitationChart data={data}/>}
+      <RowContainer2>
+        <div>
+          {types.map((type) => (
+            <Button
+              active={active === type}
+              onClick={() => setActive(type)}
+            >
+              {type}
+            </Button>
+          ))}
+        </div>
+        <div style={{ display: 'flex', paddingTop: '20px' }}>
+          <Radial percent={Math.round(currHumidity)} measure='Humidity' />
+          <Radial percent={Math.round(currCloudCover)} measure='Cloud cover' />
+        </div>
+      </RowContainer2>
+
+      {active === 'Temperature °C' && <LineChart data={data} />}
+      {active === 'Precipitation (mm)' && (
+        <PrecipitationChart data={data} />
+      )}
     </div>
   );
 }
