@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { BsSun } from 'react-icons/bs';
+import { WiDayCloudy } from 'react-icons/wi';
 
 const Card = styled.div`
   box-shadow: 0 3px 6px 0 #87cefa;
@@ -10,7 +10,7 @@ const Card = styled.div`
   border-radius: 5px;
   color: white;
   background: rgba(135, 206, 250);
-  transition: 0.4s;
+  transition: 0.2s;
 
   :hover {
     -webkit-transform: scale(1.1);
@@ -37,29 +37,32 @@ const WeekDay = styled.span`
   margin-bottom: 0.5 rem;
 `;
 
-const Condition = styled.span`
-  margin-bottom: 0.5 rem;
+const HighTemp = styled.span`
+  margin-bottom: 0.5rem;
+`;
+
+const LowTemp = styled.span`
+  margin-bottom: 1rem;
+  opacity: 0.7;
 `;
 const WeatherIcon = styled.div`
-  margin-bottom: 0.5 rem;
+  margin-bottom: 0.5rem;
+  font-size: 25px;
+  padding: 10px;
 `;
-const ForecastLabel = styled.p``;
-function CardDetail({ weekday, temperature, weatherIcon, forecastLabel }) {
+const ForecastLabel = styled.div``;
+function CardDetail({ weekday, highTemp, lowTemp, emoji, forecastLabel, symbol }) {
   return (
     <Card>
       <CardDetails>
-        <WeekDay>Mon</WeekDay>
-        <WeatherIcon>
-          <BsSun
-            style={{
-              color: '#faeb7c',
-              fontSize: '20px',
-              padding: '10px',
-            }}
-          />
-        </WeatherIcon>
-        <Condition>20°C</Condition>
-        <ForecastLabel>Sunny</ForecastLabel>
+        <WeekDay>{weekday}</WeekDay>
+        <WeatherIcon
+          dangerouslySetInnerHTML={{ __html: emoji }}
+        ></WeatherIcon>
+        <HighTemp>{highTemp}°C  </HighTemp>
+        <LowTemp>{lowTemp}°C </LowTemp>
+        <ForecastLabel>{forecastLabel}</ForecastLabel>
+        <ForecastLabel dangerouslySetInnerHTML={{ __html: symbol }}></ForecastLabel>
       </CardDetails>
     </Card>
   );
