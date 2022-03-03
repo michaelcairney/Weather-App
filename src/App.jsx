@@ -6,6 +6,7 @@ import Radial from './components/RadialChart';
 import styled from 'styled-components';
 import CardDetail from './components/CardDetail';
 import { fetchData } from './util/API';
+import ChartUpdate from './components/ChartUpdate';
 
 const RowContainer1 = styled.div`
   display: flex;
@@ -64,7 +65,7 @@ export default function App() {
   ];
 
   var days = weatherData?.daily?.time?.map(
-    (time) => daysOfWeek[new Date(time).getDay()],
+    (time) => daysOfWeek[new Date(time).getDay()]
   );
 
   // CLOUDCOVER RADIAL
@@ -128,16 +129,13 @@ export default function App() {
         <SideBar
           data={weatherData}
           forecastLabel={
-            getWeatherCode(weatherData?.current_weather?.weathercode)
-              .weather
+            getWeatherCode(weatherData?.current_weather?.weathercode).weather
           }
           emoji={
-            getWeatherCode(weatherData?.current_weather?.weathercode)
-              .emoji
+            getWeatherCode(weatherData?.current_weather?.weathercode).emoji
           }
           symbol={
-            getWeatherCode(weatherData?.current_weather?.weathercode)
-              .symbol
+            getWeatherCode(weatherData?.current_weather?.weathercode).symbol
           }
         />
         <ColContainer>
@@ -146,39 +144,24 @@ export default function App() {
               <CardDetail
                 weekday={day}
                 forecastLabel={
-                  getWeatherCode(
-                    weatherData?.daily?.weathercode[index],
-                  ).weather
+                  getWeatherCode(weatherData?.daily?.weathercode[index]).weather
                 }
                 emoji={
-                  getWeatherCode(
-                    weatherData?.daily?.weathercode[index],
-                  ).emoji
+                  getWeatherCode(weatherData?.daily?.weathercode[index]).emoji
                 }
                 symbol={
-                  getWeatherCode(
-                    weatherData?.daily?.weathercode[index],
-                  ).symbol
+                  getWeatherCode(weatherData?.daily?.weathercode[index]).symbol
                 }
-                highTemp={
-                  weatherData?.daily?.temperature_2m_max[index]
-                }
-                lowTemp={
-                  weatherData?.daily?.temperature_2m_min[index]
-                }
+                highTemp={weatherData?.daily?.temperature_2m_max[index]}
+                lowTemp={weatherData?.daily?.temperature_2m_min[index]}
               />
             ))}
           </RowCard>
-          <LineChart data={weatherData} />
+          <ChartUpdate data={weatherData} />
+          {/* <LineChart data={weatherData} /> */}
           <RowContainer2>
-            <Radial
-              percent={Math.round(currHumidity)}
-              measure='Humidity'
-            />
-            <Radial
-              percent={Math.round(currCloudCover)}
-              measure='Cloudcover'
-            />
+            <Radial percent={Math.round(currHumidity)} measure="Humidity" />
+            <Radial percent={Math.round(currCloudCover)} measure="Cloudcover" />
             <Radial percent={55} />
           </RowContainer2>
         </ColContainer>

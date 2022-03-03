@@ -63,7 +63,7 @@ function LineChart({ data }) {
       .attr('x1', 0)
       .attr('y1', height + margin.bottom)
       .attr('x2', 0)
-      .attr('y2', margin.top - height / 4)
+      .attr('y2', margin.top - height)
       .selectAll('stop')
       .data(d3.ticks(0, 1, 10))
       .join('stop')

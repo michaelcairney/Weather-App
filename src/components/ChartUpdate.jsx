@@ -48,7 +48,7 @@ const Button = styled.button`
 Button.defaultProps = {
   theme: 'spaces',
 };
-export default function ChartUpdate() {
+export default function ChartUpdate({ data }) {
   const types = ['Temperature', 'Precipitation'];
   const [active, setActive] = useState(types[0]);
   return (
@@ -58,8 +58,8 @@ export default function ChartUpdate() {
           {type}
         </Button>
       ))}
-      {active === 'Temperature' && <LineChart />}
-      {active === 'Precipitation' && <PrecipitationChart />}
+      {active === 'Temperature' && <LineChart data={data} />}
+      {active === 'Precipitation' && <PrecipitationChart data={data}/>}
     </div>
   );
 }
