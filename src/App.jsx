@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
-import LineChart from './LineChart';
 import SideBar from './SideBar';
 import Radial from './RadialChart';
 import styled from 'styled-components';
 import CardDetail from './CardDetail';
+import ChartUpdate from './ChartUpdate';
 
 const RowContainer1 = styled.div`
   display: flex;
@@ -50,7 +50,7 @@ export default function App() {
           <CardDetail />
           <CardDetail />
         </RowCard>
-        <LineChart />
+        <ChartUpdate />
         <RowContainer2>
           <Radial percent={22} measure="Humidity" />
           <Radial percent={88} measure="Cloudcover" />
