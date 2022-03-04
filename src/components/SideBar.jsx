@@ -1,5 +1,8 @@
 import * as d3 from 'd3';
 import styled from 'styled-components';
+import cities from 'cities.json';
+import Select from 'react-select';
+import { useEffect, useState } from 'react';
 
 const Container = styled.div`
   display: flex;
@@ -16,26 +19,36 @@ const Container = styled.div`
   list-style: none;
 `;
 
-const Dropdown = styled.select`
+const Dropdown = styled.input`
   border: none;
   border-radius: 5px;
   padding: 3px;
   font-size: 1rem;
   color: #ffffff;
-  background: #ffffff11;
+  background: #ffffff55;
   :focus {
     outline: none;
   }
   :hover {
-    background: #ffffff55;
+    background: #ffffffa0;
+  }
+  ::placeholder {
+    color: #ffffffa7;
   }
 `;
 
 const Option = styled.option`
-  background: #8dcff5;
+  background: #3a6db9;
 `;
 
-export default function SideBar({ data, forecastLabel, emoji, symbol }) {
+export default function SideBar({
+  data,
+  forecastLabel,
+  emoji,
+  symbol,
+  setCoords,
+  coords,
+}) {
   const days = [
     'Sunday',
     'Monday',
@@ -65,7 +78,7 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
   const currDate = date?.getDate();
   const currMonth = months[date?.getMonth()];
   const currTemp = data?.current_weather?.temperature;
-  
+
   const currHour =
     new Date().getHours() < 10
       ? '0' + new Date().getHours()
@@ -76,25 +89,51 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
       : new Date().getMinutes();
   const currTime = currHour + ':' + currMinute;
 
-  const sunrise =
-    new Date(data?.daily?.sunrise[0]).getHours() +
-    ':' +
-    new Date(data?.daily?.sunrise[0]).getMinutes();
+  const sunrise = new Date(data?.daily?.sunrise[0]);
+  const sunriseHour = sunrise?.getHours() < 10 ? '0' + sunrise?.getHours() : sunrise?.getHours()
+  const sunriseMinute = sunrise?.getMinutes() < 10 ? 0 + sunrise?.getMinutes() : sunrise?.getMinutes()
 
-  const sunset =
-    new Date(data?.daily?.sunset[0]).getHours() -
-    12 +
-    ':' +
-    new Date(data?.daily?.sunset[0]).getMinutes();
+  const sunset = new Date(data?.daily?.sunset[0]);
+  const sunsetHour = sunset?.getHours() < 10 ? '0' + sunset?.getHours() : sunset?.getHours()
+  const sunsetMinute = sunset?.getMinutes() < 10 ? 0 + sunset?.getMinutes() : sunset?.getMinutes()
 
+  const [input, setInput] = useState('London, GB');
+  const [myCities, setMyCities] = useState(cities);
+
+  useEffect(() => {
+    setMyCities(
+      cities.filter((city) =>
+        input ? city.name.toLowerCase().includes(input) : city,
+      ),
+    );
+    const cityAlt = cities.map(
+      (city) => city.name + ', ' + city.country,
+    );
+    if (cityAlt.includes(input)) {
+      const cityIndex = cityAlt.findIndex((city) => city === input);
+      const citySelected = cities[cityIndex];
+      setCoords({ lat: citySelected.lat, lng: citySelected.lng });
+    }
+  }, [input]);
 
   return (
     <Container>
       {currTime}
-      <Dropdown>
-        <Option value='London'>London</Option>
-        <Option value='Paris'>Paris</Option>
-      </Dropdown>
+      <Dropdown
+        id='searchbar'
+        list='cities'
+        placeholder='Search for location...'
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <datalist type='text' placeholder='Search..' id='cities'>
+        {myCities.slice(0, 10).map((city) => (
+          <option
+            value={city.name + ', ' + city.country}
+            key={city.name}
+          />
+        ))}
+      </datalist>
       <section style={{ paddingBottom: '1rem' }}>
         <li style={{ fontSize: '2rem' }}>{currDay}</li>
         <li style={{ fontWeight: '300', paddingBottom: '1rem' }}>
@@ -118,11 +157,11 @@ export default function SideBar({ data, forecastLabel, emoji, symbol }) {
       <div style={{ display: 'flex', gap: '3rem' }}>
         <section>
           <li style={{ fontWeight: '300' }}>Sunrise</li>
-          <li>{sunrise} AM</li>
+          <li>{sunriseHour + ':' + sunriseMinute} </li>
         </section>
         <section>
           <li style={{ fontWeight: '300' }}>Sunset</li>
-          <li>{sunset} PM</li>
+          <li>{sunsetHour + ':' + sunsetMinute} </li>
         </section>
       </div>
     </Container>

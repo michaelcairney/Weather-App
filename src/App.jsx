@@ -42,17 +42,21 @@ const RowCard = styled.div`
 export default function App() {
   const [weatherData, setWeatherData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [coords, setCoords] = useState({
+    lat: 51.5002,
+    lng: -0.1262,
+  });
 
-  const getWeatherData = async () => {
-    const response = await fetchData();
+  const getWeatherData = async (lat, lng) => {
+    const response = await fetchData(lat, lng);
     setWeatherData(response);
   };
 
   useEffect(() => {
     setLoading(true);
-    getWeatherData();
+    getWeatherData(coords.lat, coords.lng);
     setLoading(false);
-  }, []);
+  }, [coords]);
 
   const daysOfWeek = [
     'Sunday',
@@ -67,8 +71,6 @@ export default function App() {
   var days = weatherData?.daily?.time?.map(
     (time) => daysOfWeek[new Date(time).getDay()],
   );
-
- 
 
   // GET APPROPRIATE INFO BASED ON API WEATHERCODE
   const getWeatherCode = (code) => {
@@ -117,7 +119,7 @@ export default function App() {
     return { weather, emoji, symbol };
   };
 
-  console.log(weatherData);
+  console.log(coords);
 
   if (loading) {
     return <p>loading</p>;
@@ -138,6 +140,8 @@ export default function App() {
             getWeatherCode(weatherData?.current_weather?.weathercode)
               .symbol
           }
+          setCoords={setCoords}
+          coords={coords}
         />
         <ColContainer>
           <RowCard>
