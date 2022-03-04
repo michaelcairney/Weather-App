@@ -2,15 +2,35 @@ import * as d3 from 'd3';
 import { useRef, useEffect } from 'react';
 import useWindowSize from '../util/useWindowSize';
 
-function LineChart({ data }) {
+function LineChart({ data, cardSelect }) {
+  // DEFINE DAYS
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  // GET DAYS IN ORDER STARTING FROM CURRENT DAY
+  const days = data?.daily?.time?.map(
+    (time) => daysOfWeek[new Date(time).getDay()],
+  );
+
+  // GET CURRENT TIME
   const currHour = new Date().getHours();
   const currDate = new Date().getDate();
+
+  // GET PRECIPITATION FOR THE WEEK
   const temps = data?.hourly?.precipitation?.slice(currHour);
   const times = data?.hourly?.time?.slice(currHour);
   const forecast = temps?.map((item, index) => [
     item,
     new Date(times[index]),
   ]);
+  var daysAfter = 0;
 
   const svgRef = useRef();
   const size = useWindowSize();
@@ -18,21 +38,26 @@ function LineChart({ data }) {
   const height = size.height;
   const width = size.width;
 
+  // INSERT TEXT TAGS ON INITIALISATION
   const labels = forecast?.map((val) => <text key={Math.random()} />);
-  // Will be called initially and on every data change
+
   useEffect(() => {
     const svg = d3.select(svgRef.current);
 
     // Define scales for x and y
+    daysAfter = days?.findIndex((day) => day === cardSelect);
     const xScale = d3
       .scaleTime()
       .domain([
-        new Date(2022, 2, currDate , currHour, 0),
-        new Date(2022, 2, currDate + 1, currHour, 0),
+        new Date(2022, 2, currDate + daysAfter, currHour, 0),
+        new Date(2022, 2, currDate + daysAfter + 1, currHour, 0),
       ])
       .range([0, width]);
 
-    const yScale = d3.scaleLinear().domain([-0.1, 2]).range([height, 0]);
+    const yScale = d3
+      .scaleLinear()
+      .domain([-0.1, 2])
+      .range([height, 0]);
 
     // Define axis for x and y
     const xAxis = d3.axisBottom(xScale).tickSize(0).tickPadding(10);
@@ -51,6 +76,10 @@ function LineChart({ data }) {
             .y0(height)
             .y1((d) => yScale(d[0])),
         )
+        .attr('opacity', '0')
+        .transition()
+        .duration(300)
+        .attr('opacity', '1')
         .attr('font-family', 'sans-serif')
         .style('stroke', 'none')
         .style('stroke-width', '2')
@@ -82,7 +111,7 @@ function LineChart({ data }) {
         .select('.labels')
         .selectAll('text')
         .data(forecast)
-        .text((d, i) => i % 2 === 0 ? `${d[0]}` : null)
+        .text((d, i) => (i % 2 === 0 ? `${d[0]}` : null))
         .attr('text-anchor', 'middle')
         .attr('x', (d) => xScale(d[1]))
         .attr('y', (d) => yScale(d[0]))
@@ -103,6 +132,9 @@ function LineChart({ data }) {
         'transform',
         `translate(${margin.left}, ${height + margin.top})`,
       )
+      .attr('opacity', '0')
+      .transition()
+      .attr('opacity', '1')
       .select('path')
       .attr('opacity', '0');
   }, [forecast]);

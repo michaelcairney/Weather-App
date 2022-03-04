@@ -23,18 +23,17 @@ function LineChart({ data, cardSelect }) {
   const currHour = new Date().getHours();
   const currDate = new Date().getDate();
 
-  // GET TEMPERATURES FOR THE WEEK
-  const temps = data?.hourly?.temperature_2m?.slice(currHour);
+  // GET WIND SPEED FOR THE WEEK
+  const temps = data?.hourly?.windspeed_10m?.slice(currHour);
   const times = data?.hourly?.time?.slice(currHour);
   const forecast = temps?.map((item, index) => [
     item,
     new Date(times[index]),
   ]);
   var daysAfter = 0;
-
   const svgRef = useRef();
   const size = useWindowSize();
-  const margin = { top: 20, bottom: 50, left: 20, right: 110 };
+  const margin = { top: 0, bottom: 50, left: 20, right: 110 };
   const height = size.height;
   const width = size.width;
 
@@ -56,7 +55,7 @@ function LineChart({ data, cardSelect }) {
 
     const yScale = d3
       .scaleLinear()
-      .domain([-10, 40])
+      .domain([0, 20])
       .range([height, 0]);
 
     // Define axis for x and y
@@ -73,9 +72,8 @@ function LineChart({ data, cardSelect }) {
             .area()
             .curve(d3.curveCardinal)
             .x((d) => xScale(d[1]))
-
             .y0(height)
-            .y1((d) => yScale(Math.round(d[0]))),
+            .y1((d) => yScale(d[0])),
         )
         .attr('opacity', '0')
         .transition()
@@ -99,21 +97,20 @@ function LineChart({ data, cardSelect }) {
       .attr('x1', 0)
       .attr('y1', height + margin.bottom)
       .attr('x2', 0)
-      .attr('y2', margin.top - height / 4)
+      .attr('y2', margin.top - height)
       .selectAll('stop')
       .data(d3.ticks(0, 1, 10))
       .join('stop')
       .attr('offset', (d) => d)
       .attr('stop-color', color.interpolator());
 
-    // labels
+    // Labels
     if (forecast) {
       d3.select(svgRef.current)
-
         .select('.labels')
         .selectAll('text')
         .data(forecast)
-        .text((d, i) => (i % 2 === 0 ? `${Math.round(d[0])}°` : null))
+        .text((d, i) => (i % 2 === 0 ? `${d[0]}` : null))
         .attr('text-anchor', 'middle')
         .attr('x', (d) => xScale(d[1]))
         .attr('y', (d) => yScale(d[0]))
@@ -130,7 +127,6 @@ function LineChart({ data, cardSelect }) {
     svg
       .select('.xAxis')
       .call(xAxis)
-
       .attr(
         'transform',
         `translate(${margin.left}, ${height + margin.top})`,
@@ -140,7 +136,7 @@ function LineChart({ data, cardSelect }) {
       .attr('opacity', '1')
       .select('path')
       .attr('opacity', '0');
-  }, [forecast, cardSelect]);
+  }, [forecast]);
   return (
     <div className='div_temp'>
       <svg

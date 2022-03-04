@@ -1,25 +1,15 @@
-import * as d3 from 'd3';
 import { useEffect, useState } from 'react';
-import LineChart from './components/LineChart';
 import SideBar from './components/SideBar';
-import Radial from './components/RadialChart';
 import styled from 'styled-components';
 import CardDetail from './components/CardDetail';
 import { fetchData } from './util/API';
 import ChartUpdate from './components/ChartUpdate';
 
+// STYLES
 const RowContainer1 = styled.div`
   display: flex;
   flex-direction: row;
   padding: 25px 0px;
-`;
-
-const RowContainer2 = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding-left: 20px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
 `;
 
 const ColContainer = styled.div`
@@ -46,18 +36,20 @@ export default function App() {
     lat: 51.5002,
     lng: -0.1262,
   });
+  const [cardSelect, setCardSelect] = useState('Friday');
 
+  // API REQUEST
   const getWeatherData = async (lat, lng) => {
     const response = await fetchData(lat, lng);
     setWeatherData(response);
   };
-
   useEffect(() => {
     setLoading(true);
     getWeatherData(coords.lat, coords.lng);
     setLoading(false);
   }, [coords]);
 
+  // DEFINE DAYS
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -67,7 +59,7 @@ export default function App() {
     'Friday',
     'Saturday',
   ];
-
+  // GET DAYS IN ORDER STARTING FROM CURRENT DAY
   var days = weatherData?.daily?.time?.map(
     (time) => daysOfWeek[new Date(time).getDay()],
   );
@@ -99,6 +91,11 @@ export default function App() {
         emoji = '&#128528;';
         symbol = '&#x2601;';
         break;
+      case 45:
+        weather = 'Fog';
+        emoji = '&#128565;';
+        symbol = '&#127787;';
+        break;
       case 61:
         weather = 'Slight rain';
         emoji = '&#128531;';
@@ -106,9 +103,28 @@ export default function App() {
         break;
       case 63:
         weather = 'Moderate rain';
+        emoji = '&#128554;';
+        symbol = '&#x1F327;';
         break;
       case 65:
         weather = 'Heavy rain';
+        emoji = '&#128557;';
+        symbol = '&#x1F327;';
+        break;
+      case 71:
+        weather = 'Slight snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
+        break;
+      case 73:
+        weather = 'Moderate snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
+        break;
+      case 75:
+        weather = 'Moderate snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
         break;
       case 80:
         weather = 'Slight rain showers';
@@ -118,8 +134,6 @@ export default function App() {
     }
     return { weather, emoji, symbol };
   };
-
-  console.log(coords);
 
   if (loading) {
     return <p>loading</p>;
@@ -169,20 +183,13 @@ export default function App() {
                 lowTemp={
                   weatherData?.daily?.temperature_2m_min[index]
                 }
+                setCardSelect={setCardSelect}
+                cardSelect={cardSelect}
+                days={days}
               />
             ))}
-          </RowCard>{' '}
-          {/* <RowContainer2>
-            <Radial
-              percent={Math.round(currHumidity)}
-              measure='Humidity'
-            />
-            <Radial
-              percent={Math.round(currCloudCover)}
-              measure='Cloudcover'
-            />
-          </RowContainer2> */}
-          <ChartUpdate data={weatherData} />
+          </RowCard>
+          <ChartUpdate data={weatherData} cardSelect={cardSelect} />
         </ColContainer>
       </RowContainer1>
     );
