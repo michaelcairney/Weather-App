@@ -1,7 +1,7 @@
-async function fetchData() {
+async function fetchData(lat = 51.5002, long = -0.1262) {
   try {
     const response = await fetch(
-      'https://api.open-meteo.com/v1/forecast?latitude=51.5002&longitude=-0.1262&hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&timezone=Europe%2FLondon',
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}2&longitude=${long}&hourly=temperature_2m,relativehumidity_2m,precipitation,cloudcover&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset&current_weather=true&timezone=Europe%2FLondon`,
     );
     return response.json();
   } catch (e) {
