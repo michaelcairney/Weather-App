@@ -33,7 +33,7 @@ export default function RadialChart({ percent, measure }) {
         'd',
         d3
           .arc()
-
+          .cornerRadius(2.5)
           .innerRadius(radius * 0.85)
           .outerRadius(radius),
       )

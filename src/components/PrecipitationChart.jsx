@@ -2,15 +2,35 @@ import * as d3 from 'd3';
 import { useRef, useEffect } from 'react';
 import useWindowSize from '../util/useWindowSize';
 
-function LineChart({ data }) {
+function LineChart({ data, cardSelect }) {
+  // DEFINE DAYS
+  const daysOfWeek = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+
+  // GET DAYS IN ORDER STARTING FROM CURRENT DAY
+  const days = data?.daily?.time?.map(
+    (time) => daysOfWeek[new Date(time).getDay()],
+  );
+
+  // GET CURRENT TIME
   const currHour = new Date().getHours();
   const currDate = new Date().getDate();
+
+  // GET TEMPERATURES FOR THE WEEK
   const temps = data?.hourly?.precipitation?.slice(currHour);
   const times = data?.hourly?.time?.slice(currHour);
   const forecast = temps?.map((item, index) => [
     item,
     new Date(times[index]),
   ]);
+  var daysAfter = 0;
 
   const svgRef = useRef();
   const size = useWindowSize();
@@ -18,17 +38,19 @@ function LineChart({ data }) {
   const height = size.height;
   const width = size.width;
 
+  // INSERT TEXT TAGS ON INITIALISATION
   const labels = forecast?.map((val) => <text key={Math.random()} />);
-  // Will be called initially and on every data change
+
   useEffect(() => {
     const svg = d3.select(svgRef.current);
 
     // Define scales for x and y
+    daysAfter = days?.findIndex((day) => day === cardSelect);
     const xScale = d3
       .scaleTime()
       .domain([
-        new Date(2022, 2, currDate, currHour, 0),
-        new Date(2022, 2, currDate + 1, currHour, 0),
+        new Date(2022, 2, currDate + daysAfter, currHour, 0),
+        new Date(2022, 2, currDate + daysAfter + 1, currHour, 0),
       ])
       .range([0, width]);
 

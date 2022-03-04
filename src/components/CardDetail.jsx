@@ -1,23 +1,22 @@
 import styled from 'styled-components';
-import { WiDayCloudy } from 'react-icons/wi';
 
+
+// STYLES
 const Card = styled.div`
   box-shadow: 0 3px 6px 0 #87cefa;
   padding: 20px 0;
-  background: white;
   font-family: 'Montserrat';
   width: 7.5rem;
   border-radius: 5px;
   color: white;
-  background: rgba(135, 206, 250);
+  opacity: ${(props) => props.opac};
+  background: #61bffa;
   transition: 0.2s;
 
   :hover {
     -webkit-transform: scale(1.1);
     -ms-transform: scale(1.1);
     transform: scale(1.05);
-    background: #fff;
-    color: #222831;
     cursor: pointer;
 
     -webkit-box-shadow: 0 0 40px -5px rgba(0, 0, 0, 0.2);
@@ -51,19 +50,35 @@ const WeatherIcon = styled.div`
   padding: 10px;
 `;
 const ForecastLabel = styled.div`
-text-align: center`;
-function CardDetail({ weekday, highTemp, lowTemp, emoji, forecastLabel, symbol }) {
+  text-align: center;
+`;
+
+function CardDetail({
+  weekday,
+  highTemp,
+  lowTemp,
+  emoji,
+  forecastLabel,
+  symbol,
+  setCardSelect,
+  cardSelect,
+}) {
   return (
-    <Card>
+    <Card
+      onClick={() => setCardSelect(weekday)}
+      opac={weekday === cardSelect ? 1 : 0.6}
+    >
       <CardDetails>
         <WeekDay>{weekday}</WeekDay>
         <WeatherIcon
           dangerouslySetInnerHTML={{ __html: emoji }}
         ></WeatherIcon>
-        <HighTemp>{highTemp}°C  </HighTemp>
+        <HighTemp>{highTemp}°C </HighTemp>
         <LowTemp>{lowTemp}°C </LowTemp>
         <ForecastLabel>{forecastLabel}</ForecastLabel>
-        <ForecastLabel dangerouslySetInnerHTML={{ __html: symbol }}></ForecastLabel>
+        <ForecastLabel
+          dangerouslySetInnerHTML={{ __html: symbol }}
+        ></ForecastLabel>
       </CardDetails>
     </Card>
   );

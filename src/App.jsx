@@ -1,25 +1,15 @@
-import * as d3 from 'd3';
 import { useEffect, useState } from 'react';
-import LineChart from './components/LineChart';
 import SideBar from './components/SideBar';
-import Radial from './components/RadialChart';
 import styled from 'styled-components';
 import CardDetail from './components/CardDetail';
 import { fetchData } from './util/API';
 import ChartUpdate from './components/ChartUpdate';
 
+// STYLES
 const RowContainer1 = styled.div`
   display: flex;
   flex-direction: row;
   padding: 25px 0px;
-`;
-
-const RowContainer2 = styled.div`
-  display: flex;
-  flex-direction: row;
-  padding-left: 20px;
-  justify-content: flex-end;
-  flex-wrap: wrap;
 `;
 
 const ColContainer = styled.div`
@@ -46,18 +36,20 @@ export default function App() {
     lat: 51.5002,
     lng: -0.1262,
   });
+  const [cardSelect, setCardSelect] = useState('Friday');
 
+  // API REQUEST
   const getWeatherData = async (lat, lng) => {
     const response = await fetchData(lat, lng);
     setWeatherData(response);
   };
-
   useEffect(() => {
     setLoading(true);
     getWeatherData(coords.lat, coords.lng);
     setLoading(false);
   }, [coords]);
 
+  // DEFINE DAYS
   const daysOfWeek = [
     'Sunday',
     'Monday',
@@ -67,7 +59,7 @@ export default function App() {
     'Friday',
     'Saturday',
   ];
-
+  // GET DAYS IN ORDER STARTING FROM CURRENT DAY
   var days = weatherData?.daily?.time?.map(
     (time) => daysOfWeek[new Date(time).getDay()],
   );
@@ -143,8 +135,6 @@ export default function App() {
     return { weather, emoji, symbol };
   };
 
-  console.log(coords);
-
   if (loading) {
     return <p>loading</p>;
   } else {
@@ -193,20 +183,13 @@ export default function App() {
                 lowTemp={
                   weatherData?.daily?.temperature_2m_min[index]
                 }
+                setCardSelect={setCardSelect}
+                cardSelect={cardSelect}
+                days={days}
               />
             ))}
-          </RowCard>{' '}
-          {/* <RowContainer2>
-            <Radial
-              percent={Math.round(currHumidity)}
-              measure='Humidity'
-            />
-            <Radial
-              percent={Math.round(currCloudCover)}
-              measure='Cloudcover'
-            />
-          </RowContainer2> */}
-          <ChartUpdate data={weatherData} />
+          </RowCard>
+          <ChartUpdate data={weatherData} cardSelect={cardSelect} />
         </ColContainer>
       </RowContainer1>
     );

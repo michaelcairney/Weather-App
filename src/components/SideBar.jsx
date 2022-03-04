@@ -1,9 +1,8 @@
-import * as d3 from 'd3';
 import styled from 'styled-components';
 import cities from 'cities.json';
-import Select from 'react-select';
 import { useEffect, useState } from 'react';
 
+// STYLES
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -37,18 +36,14 @@ const Dropdown = styled.input`
   }
 `;
 
-const Option = styled.option`
-  background: #3a6db9;
-`;
-
 export default function SideBar({
   data,
   forecastLabel,
   emoji,
   symbol,
   setCoords,
-  coords,
 }) {
+  // DEFINE DAYS AND MONTHS
   const days = [
     'Sunday',
     'Monday',
@@ -73,12 +68,16 @@ export default function SideBar({
     'December',
   ];
 
-  const date = new Date(data?.daily?.time[0]);
-  const currDay = days[date?.getDay()];
-  const currDate = date?.getDate();
-  const currMonth = months[date?.getMonth()];
+  // GET CURRENT CALENDAR INFORMATION
+  const date = new Date();
+  const currDay = days[date.getDay()];
+  const currDate = date.getDate();
+  const currMonth = months[date.getMonth()];
+
+  // GET CURRENT TEMPERATURE USING API
   const currTemp = data?.current_weather?.temperature;
 
+  // GET CURRENT TIME INFORMATION
   const currHour =
     new Date().getHours() < 10
       ? '0' + new Date().getHours()
@@ -89,21 +88,38 @@ export default function SideBar({
       : new Date().getMinutes();
   const currTime = currHour + ':' + currMinute;
 
+  // GET SUNRISE INFO FROM API
   const sunrise = new Date(data?.daily?.sunrise[0]);
-  const sunriseHour = sunrise?.getHours() < 10 ? '0' + sunrise?.getHours() : sunrise?.getHours()
-  const sunriseMinute = sunrise?.getMinutes() < 10 ? 0 + sunrise?.getMinutes() : sunrise?.getMinutes()
+  const sunriseHour =
+    sunrise?.getHours() < 10
+      ? '0' + sunrise?.getHours()
+      : sunrise?.getHours();
+  const sunriseMinute =
+    sunrise?.getMinutes() < 10
+      ? '0' + sunrise?.getMinutes()
+      : sunrise?.getMinutes();
 
+  // GET SUNSET INFO FROM API
   const sunset = new Date(data?.daily?.sunset[0]);
-  const sunsetHour = sunset?.getHours() < 10 ? '0' + sunset?.getHours() : sunset?.getHours()
-  const sunsetMinute = sunset?.getMinutes() < 10 ? 0 + sunset?.getMinutes() : sunset?.getMinutes()
+  const sunsetHour =
+    sunset?.getHours() < 10
+      ? '0' + sunset?.getHours()
+      : sunset?.getHours();
+  const sunsetMinute =
+    sunset?.getMinutes() < 10
+      ? '0' + sunset?.getMinutes()
+      : sunset?.getMinutes();
 
   const [input, setInput] = useState('London, GB');
   const [myCities, setMyCities] = useState(cities);
 
+  // SIDE EFFECT FOR CHANGING SEARCH BAR AUTOCOMPLETE SUGGESTIONS
   useEffect(() => {
     setMyCities(
       cities.filter((city) =>
-        input ? city.name.toLowerCase().includes(input) : city,
+        input
+          ? city.name.toLowerCase().includes(input.toLowerCase())
+          : city,
       ),
     );
     const cityAlt = cities.map(
@@ -119,6 +135,7 @@ export default function SideBar({
   return (
     <Container>
       {currTime}
+      <li> Current weather</li>
       <Dropdown
         id='searchbar'
         list='cities'
@@ -139,10 +156,8 @@ export default function SideBar({
         <li style={{ fontWeight: '300', paddingBottom: '1rem' }}>
           {currDate} {currMonth} 2022
         </li>
-        <li style={{ fontWeight: '300' }}></li>
       </section>
-
-      <section style={{ paddingBottom: '3rem' }}>
+      <section style={{ paddingBottom: '2rem' }}>
         <li
           style={{ fontSize: '5rem', paddingBottom: '2rem' }}
           dangerouslySetInnerHTML={{ __html: emoji }}
@@ -153,7 +168,6 @@ export default function SideBar({
         <li dangerouslySetInnerHTML={{ __html: symbol }}></li>
         <li>{forecastLabel}</li>
       </section>
-
       <div style={{ display: 'flex', gap: '3rem' }}>
         <section>
           <li style={{ fontWeight: '300' }}>Sunrise</li>
@@ -162,8 +176,9 @@ export default function SideBar({
         <section>
           <li style={{ fontWeight: '300' }}>Sunset</li>
           <li>{sunsetHour + ':' + sunsetMinute} </li>
-        </section>
-      </div>
+        </section>{' '}
+      </div>{' '}
+      <li style={{fontSize: '1rem', fontWeight: '100'}}>GMT</li>
     </Container>
   );
 }
