@@ -42,23 +42,80 @@ function LineChart({ data, cardSelect }) {
   const labels = forecast?.map((val) => <text key={Math.random()} />);
 
   useEffect(() => {
+    const Tooltip = d3
+      .select('.div_temp')
+      .append('div')
+      .style('display', 'none')
+      .attr('class', 'tooltip')
+      .style('font-family', 'Montserrat')
+      .style('font-size', '0.8rem')
+      .style('background-color', 'white')
+      .style('border', 'none')
+      .style('border-radius', '5px')
+      .style('padding', '5px')
+      .style('position', 'absolute');
+
+    // Function for displaying tool tip
+    const mouseover = function (d) {
+      Tooltip.style('display', 'block');
+    };
+
+    // Function to change the tooltip information and position
+    const mousemove = function (e, d) {
+      const index = d3.bisect(
+        times.map((time) => new Date(time)),
+        xScale.invert(e.pageX - 255),
+      );
+      const xValue =
+        xScale.invert(e.pageX - 255).getHours() +
+        ':' +
+        xScale.invert(e.pageX - 255).getMinutes();
+      const yValue = Math.round(temps[index]);
+      Tooltip.html(
+        `<strong>Temperature:</strong> ${yValue}°C <br/> <strong>Time:</strong> ${xValue}`,
+      )
+        .style('left', `${e.pageX - 30}px`)
+        .style('top', `${e.pageY - 70}px`);
+      console.log('display');
+    };
+
+    // Function to hide tooltip and restore dot style to default
+    const mouseleave = function (d) {
+      Tooltip.style('display', 'none');
+    };
+
     const svg = d3.select(svgRef.current);
 
     // Define scales for x and y
     daysAfter = days?.findIndex((day) => day === cardSelect);
-    const xScale = daysAfter === 6 ? d3
-    .scaleTime()
-    .domain([
-      new Date(2022, 2, currDate + daysAfter, currHour, 0),
-      new Date(2022, 2, currDate + daysAfter, currHour + 9, 0),
-    ])
-    .range([0, width]) : d3
-      .scaleTime()
-      .domain([
-        new Date(2022, 2, currDate + daysAfter, currHour, 0),
-        new Date(2022, 2, currDate + daysAfter + 1, currHour, 0),
-      ])
-      .range([0, width]);
+    const xScale =
+      daysAfter === 6
+        ? d3
+            .scaleTime()
+            .domain([
+              new Date(2022, 2, currDate + daysAfter, currHour, 0),
+              new Date(
+                2022,
+                2,
+                currDate + daysAfter,
+                currHour + 9,
+                0,
+              ),
+            ])
+            .range([0, width])
+        : d3
+            .scaleTime()
+            .domain([
+              new Date(2022, 2, currDate + daysAfter, currHour, 0),
+              new Date(
+                2022,
+                2,
+                currDate + daysAfter + 1,
+                currHour,
+                0,
+              ),
+            ])
+            .range([0, width]);
 
     const yScale = d3
       .scaleLinear()
@@ -67,6 +124,7 @@ function LineChart({ data, cardSelect }) {
 
     // Define axis for x and y
     const xAxis = d3.axisBottom(xScale).tickSize(0).tickPadding(10);
+
     // AREA
     if (forecast) {
       d3.select(svgRef.current)
@@ -83,6 +141,9 @@ function LineChart({ data, cardSelect }) {
             .y0(height)
             .y1((d) => yScale(Math.round(d[0]))),
         )
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseleave', mouseleave)
         .attr('opacity', '0')
         .transition()
         .duration(300)
@@ -92,6 +153,7 @@ function LineChart({ data, cardSelect }) {
         .style('stroke-width', '2')
         .style('fill', 'url(#temperature-gradient)');
     }
+    d3.select(svgRef.current);
 
     // Linear gradient
     const color = d3.scaleSequential(
@@ -136,7 +198,6 @@ function LineChart({ data, cardSelect }) {
     svg
       .select('.xAxis')
       .call(xAxis)
-
       .attr(
         'transform',
         `translate(${margin.left}, ${height + margin.top})`,
