@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import LineChart from './LineChart';
 import PrecipitationChart from './PrecipitationChart';
+import WindSpeedChart from './WindSpeedChart'
 import Radial from './RadialChart';
 
 // STYLES
@@ -21,7 +22,7 @@ const RowContainer2 = styled.div`
   padding-left: 20px;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10rem;
+  gap: 4rem;
 `;
 
 const Button = styled.button`
@@ -117,7 +118,7 @@ export default function ChartUpdate({ data, cardSelect }) {
     );
   }, [cardSelect]);
 
-  const types = ['Temperature °C', 'Precipitation (mm)'];
+  const types = ['Temperature °C', 'Precipitation (mm)', 'Wind speed (mph)'];
   const [active, setActive] = useState(types[0]);
   return (
     <div>
@@ -151,6 +152,9 @@ export default function ChartUpdate({ data, cardSelect }) {
       )}
       {active === 'Precipitation (mm)' && (
         <PrecipitationChart data={data} cardSelect={cardSelect} />
+      )}
+      {active === 'Wind speed (mph)' && (
+        <WindSpeedChart data={data} cardSelect={cardSelect} />
       )}
     </div>
   );

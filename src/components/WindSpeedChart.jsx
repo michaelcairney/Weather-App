@@ -23,15 +23,14 @@ function LineChart({ data, cardSelect }) {
   const currHour = new Date().getHours();
   const currDate = new Date().getDate();
 
-  // GET PRECIPITATION FOR THE WEEK
-  const temps = data?.hourly?.precipitation?.slice(currHour);
+  // GET WIND SPEED FOR THE WEEK
+  const temps = data?.hourly?.windspeed_10m?.slice(currHour);
   const times = data?.hourly?.time?.slice(currHour);
   const forecast = temps?.map((item, index) => [
     item,
     new Date(times[index]),
   ]);
   var daysAfter = 0;
-
   const svgRef = useRef();
   const size = useWindowSize();
   const margin = { top: 0, bottom: 50, left: 20, right: 110 };
@@ -56,7 +55,7 @@ function LineChart({ data, cardSelect }) {
 
     const yScale = d3
       .scaleLinear()
-      .domain([-0.1, 2])
+      .domain([0, 20])
       .range([height, 0]);
 
     // Define axis for x and y

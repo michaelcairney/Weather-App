@@ -29,6 +29,7 @@ export default function RadialChart({ percent, measure }) {
       .data(arcData)
 
       .join('path')
+
       .attr(
         'd',
         d3
