@@ -43,17 +43,19 @@ function LineChart({ data, cardSelect }) {
 
   useEffect(() => {
     const Tooltip = d3
-      .select('.div_temp')
-      .append('div')
-      .style('display', 'none')
-      .attr('class', 'tooltip')
-      .style('font-family', 'Montserrat')
-      .style('font-size', '0.8rem')
-      .style('background-color', 'white')
-      .style('border', 'none')
-      .style('border-radius', '5px')
-      .style('padding', '5px')
-      .style('position', 'absolute');
+    .select('.div_temp')
+    .append('div')
+    .style('display', 'none')
+    .attr('class', 'tooltip')
+    .style('font-family', 'Montserrat')
+    .style('font-size', '15px')
+    .style('background-color', '#0378bdd2')
+    .style('border', 'none')
+    .style('border-radius', '5px')
+    .style('padding', '8px')
+    .style('position', 'absolute')
+    .style('opacity', 0.8)
+    .style('color', 'white');
 
     // Function for displaying tool tip
     const mouseover = function (d) {
@@ -64,12 +66,12 @@ function LineChart({ data, cardSelect }) {
     const mousemove = function (e, d) {
       const index = d3.bisect(
         times.map((time) => new Date(time)),
-        xScale.invert(e.pageX - 255),
+        xScale.invert(e.pageX - 290),
       );
       const xValue =
-        xScale.invert(e.pageX - 255).getHours() +
+        xScale.invert(e.pageX - 290).getHours() +
         ':' +
-        xScale.invert(e.pageX - 255).getMinutes();
+        xScale.invert(e.pageX - 290).getMinutes();
       const yValue = Math.round(temps[index]);
       Tooltip.html(
         `<strong>Temperature:</strong> ${yValue}°C <br/> <strong>Time:</strong> ${xValue}`,

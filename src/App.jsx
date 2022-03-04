@@ -15,7 +15,7 @@ const RowContainer1 = styled.div`
 const ColContainer = styled.div`
   display: flex;
   flex-direction: column;
-  background: #1111;
+  background: #87cefa29;
   padding: 20px 0;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;

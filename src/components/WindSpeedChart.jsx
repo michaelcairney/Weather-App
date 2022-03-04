@@ -41,6 +41,48 @@ function LineChart({ data, cardSelect }) {
   const labels = forecast?.map((val) => <text key={Math.random()} />);
 
   useEffect(() => {
+    const Tooltip = d3
+    .select('.div_temp')
+    .append('div')
+    .style('display', 'none')
+    .attr('class', 'tooltip')
+    .style('font-family', 'Montserrat')
+    .style('font-size', '15px')
+    .style('background-color', '#0378bdd2')
+    .style('border', 'none')
+    .style('border-radius', '5px')
+    .style('padding', '8px')
+    .style('position', 'absolute')
+    .style('opacity', 0.8)
+    .style('color', 'white');
+
+     // Function for displaying tool tip
+     const mouseover = function (d) {
+      Tooltip.style('display', 'block');
+    };
+    // Function to change the tooltip information and position
+    const mousemove = function (e, d) {
+      const index = d3.bisect(
+        times.map((time) => new Date(time)),
+        xScale.invert(e.pageX - 290),
+      );
+      const xValue =
+        xScale.invert(e.pageX - 290).getHours() +
+        ':' +
+        xScale.invert(e.pageX - 290).getMinutes();
+      const yValue = temps[index];
+      Tooltip.html(
+        `<strong>Wind speed:</strong> ${yValue}mph <br/> <strong>Time:</strong> ${xValue}`,
+      )
+        .style('left', `${e.pageX - 30}px`)
+        .style('top', `${e.pageY - 70}px`);
+      console.log('display');
+    };
+
+    // Function to hide tooltip and restore dot style to default
+    const mouseleave = function (d) {
+      Tooltip.style('display', 'none');
+    };
     const svg = d3.select(svgRef.current);
 
     // Define scales for x and y
@@ -81,6 +123,9 @@ function LineChart({ data, cardSelect }) {
             .y0(height)
             .y1((d) => yScale(d[0])),
         )
+        .on('mouseover', mouseover)
+        .on('mousemove', mousemove)
+        .on('mouseleave', mouseleave)
         .attr('opacity', '0')
         .transition()
         .duration(300)
