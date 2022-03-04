@@ -99,6 +99,11 @@ export default function App() {
         emoji = '&#128528;';
         symbol = '&#x2601;';
         break;
+      case 45:
+        weather = 'Fog';
+        emoji = '&#128565;';
+        symbol = '&#127787;';
+        break;
       case 61:
         weather = 'Slight rain';
         emoji = '&#128531;';
@@ -106,9 +111,28 @@ export default function App() {
         break;
       case 63:
         weather = 'Moderate rain';
+        emoji = '&#128554;';
+        symbol = '&#x1F327;';
         break;
       case 65:
         weather = 'Heavy rain';
+        emoji = '&#128557;';
+        symbol = '&#x1F327;';
+        break;
+      case 71:
+        weather = 'Slight snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
+        break;
+      case 73:
+        weather = 'Moderate snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
+        break;
+      case 75:
+        weather = 'Moderate snow fall';
+        emoji = '&#129398;';
+        symbol = '&#x1F328;';
         break;
       case 80:
         weather = 'Slight rain showers';

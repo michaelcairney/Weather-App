@@ -21,20 +21,23 @@ export default function RadialChart({ percent, measure }) {
   useEffect(() => {
     d3.select(chartRef.current)
       .select('#pieChart')
-      .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')')
+      .attr(
+        'transform',
+        'translate(' + width / 2 + ',' + height / 2 + ')',
+      )
       .selectAll('path')
-
       .data(arcData)
 
       .join('path')
-
       .attr(
         'd',
         d3
           .arc()
+
           .innerRadius(radius * 0.85)
-          .outerRadius(radius)
+          .outerRadius(radius),
       )
+
       .attr('fill', (d) => color(d))
       .attr('stroke', 'none')
       .style('stroke-width', '2px')
@@ -64,9 +67,9 @@ export default function RadialChart({ percent, measure }) {
   return (
     <div>
       <svg width={width + margin} height={height} ref={chartRef}>
-        <g id="pieChart">
-          <text id="measureDisplay" />
-          <text id="percentDisplay" />
+        <g id='pieChart'>
+          <text id='measureDisplay' />
+          <text id='percentDisplay' />
         </g>
       </svg>
     </div>

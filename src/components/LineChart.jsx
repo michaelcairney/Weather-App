@@ -34,7 +34,7 @@ function LineChart({ data }) {
 
     const yScale = d3
       .scaleLinear()
-      .domain([-10, 25])
+      .domain([-10, 40])
       .range([height, 0]);
 
     // Define axis for x and y
@@ -55,6 +55,10 @@ function LineChart({ data }) {
             .y0(height)
             .y1((d) => yScale(Math.round(d[0]))),
         )
+        .attr('opacity', '0')
+        .transition()
+        .duration(300)
+        .attr('opacity', '1')
         .attr('font-family', 'sans-serif')
         .style('stroke', 'none')
         .style('stroke-width', '2')
@@ -80,6 +84,7 @@ function LineChart({ data }) {
       .attr('offset', (d) => d)
       .attr('stop-color', color.interpolator());
 
+    // labels
     if (forecast) {
       d3.select(svgRef.current)
 
@@ -103,10 +108,14 @@ function LineChart({ data }) {
     svg
       .select('.xAxis')
       .call(xAxis)
+
       .attr(
         'transform',
         `translate(${margin.left}, ${height + margin.top})`,
       )
+      .attr('opacity', '0')
+      .transition()
+      .attr('opacity', '1')
       .select('path')
       .attr('opacity', '0');
   }, [forecast]);
