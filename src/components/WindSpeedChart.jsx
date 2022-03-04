@@ -45,7 +45,13 @@ function LineChart({ data, cardSelect }) {
 
     // Define scales for x and y
     daysAfter = days?.findIndex((day) => day === cardSelect);
-    const xScale = d3
+    const xScale = daysAfter === 6 ? d3
+    .scaleTime()
+    .domain([
+      new Date(2022, 2, currDate + daysAfter, currHour, 0),
+      new Date(2022, 2, currDate + daysAfter, currHour + 9, 0),
+    ])
+    .range([0, width]) : d3
       .scaleTime()
       .domain([
         new Date(2022, 2, currDate + daysAfter, currHour, 0),
@@ -55,7 +61,7 @@ function LineChart({ data, cardSelect }) {
 
     const yScale = d3
       .scaleLinear()
-      .domain([0, 20])
+      .domain([0, 40])
       .range([height, 0]);
 
     // Define axis for x and y

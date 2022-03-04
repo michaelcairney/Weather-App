@@ -36,7 +36,6 @@ export default function App() {
     lat: 51.5002,
     lng: -0.1262,
   });
-  const [cardSelect, setCardSelect] = useState('Friday');
 
   // API REQUEST
   const getWeatherData = async (lat, lng) => {
@@ -62,6 +61,10 @@ export default function App() {
   // GET DAYS IN ORDER STARTING FROM CURRENT DAY
   var days = weatherData?.daily?.time?.map(
     (time) => daysOfWeek[new Date(time).getDay()],
+  );
+
+  const [cardSelect, setCardSelect] = useState(
+    daysOfWeek[new Date().getDay()],
   );
 
   // GET APPROPRIATE INFO BASED ON API WEATHERCODE
@@ -130,6 +133,31 @@ export default function App() {
         weather = 'Slight rain showers';
         emoji = '&#128546;';
         symbol = '&#x2602;';
+        break;
+      case 81:
+        weather = 'Rain showers';
+        emoji = '&#128560;';
+        symbol = '&#x2602;';
+        break;
+      case 82:
+        weather = 'Rain showers';
+        emoji = '&#128560;';
+        symbol = '&#x2602;';
+        break;
+      case 95:
+        weather = 'Thunderstorm';
+        emoji = '&#128561;';
+        symbol = '&#9889;';
+        break;
+      case 96:
+        weather = 'Thunderstorm';
+        emoji = '&#128561;';
+        symbol = '&#9889;';
+        break;
+      case 99:
+        weather = 'Thunderstorm';
+        emoji = '&#128561;';
+        symbol = '&#9889;';
         break;
     }
     return { weather, emoji, symbol };

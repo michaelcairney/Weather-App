@@ -3,7 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import LineChart from './LineChart';
 import PrecipitationChart from './PrecipitationChart';
-import WindSpeedChart from './WindSpeedChart'
+import WindSpeedChart from './WindSpeedChart';
 import Radial from './RadialChart';
 
 // STYLES
@@ -110,6 +110,7 @@ export default function ChartUpdate({ data, cardSelect }) {
         ?.slice(daysAfter * 24, (daysAfter + 1) * 24)
         .reduce((prev, curr) => prev + curr) / 24,
     );
+    console.log(cloudCover);
 
     setHumidity(
       data?.hourly?.relativehumidity_2m
@@ -118,7 +119,11 @@ export default function ChartUpdate({ data, cardSelect }) {
     );
   }, [cardSelect]);
 
-  const types = ['Temperature °C', 'Precipitation (mm)', 'Wind speed (mph)'];
+  const types = [
+    'Temperature °C',
+    'Precipitation (mm)',
+    'Wind speed (mph)',
+  ];
   const [active, setActive] = useState(types[0]);
   return (
     <div>
@@ -135,12 +140,22 @@ export default function ChartUpdate({ data, cardSelect }) {
         </div>
         <div style={{ display: 'flex', paddingTop: '20px' }}>
           <Radial
-            percent={Math.round(humidity ? humidity : currHumidity)}
+            percent={Math.round(
+              humidity
+                ? humidity
+                : humidity === 0
+                ? humidity
+                : currHumidity,
+            )}
             measure='Humidity'
           />
           <Radial
             percent={Math.round(
-              cloudCover ? cloudCover : currCloudCover,
+              cloudCover
+                ? cloudCover
+                : cloudCover === 0
+                ? cloudCover
+                : currCloudCover,
             )}
             measure='Cloud cover'
           />
